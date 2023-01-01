@@ -1,34 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import "./App.css";
+import reactLogo from "./assets/react.svg";
+
+interface PostType {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+}
+
+const fetchPosts = async () => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const posts = await response.json();
+  return posts as PostType[];
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [posts, setPosts] = useState<PostType[]>([
+    {
+      userId: 1,
+      id: 1,
+      title:
+        "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+      body: "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto",
+    },
+    {
+      userId: 1,
+      id: 2,
+      title: "qui est esse",
+      body: "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla",
+    },
+  ]);
+  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchPosts()
+      .then((posts) => {
+        setPosts(posts);
+      })
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {isLoading && (
+        <img src={reactLogo} className="logo react" alt="React logo" />
+      )}
+      {error && <p className="error">{error.message}</p>}
+      {posts.map((post) => (
+        <Post key={post.id} post={post} />
+      ))}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
+
+interface PostProps {
+  post: PostType;
+}
+
+const Post = ({ post }: PostProps) => (
+  <div className="post">
+    <h2>{post.title}</h2>
+    <p>{post.body}</p>
+  </div>
+);
