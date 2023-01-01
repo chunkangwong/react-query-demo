@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import reactLogo from "./assets/react.svg";
 
-interface PostType {
+interface Post {
   userId: number;
   id: number;
   title: string;
@@ -12,11 +11,11 @@ interface PostType {
 const fetchPosts = async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/posts");
   const posts = await response.json();
-  return posts as PostType[];
+  return posts as Post[];
 };
 
 function App() {
-  const [posts, setPosts] = useState<PostType[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,26 +35,16 @@ function App() {
 
   return (
     <div className="App">
-      {isLoading && (
-        <img src={reactLogo} className="logo react" alt="React logo" />
-      )}
+      {isLoading && <p>Loading...</p>}
       {error && <p className="error">{error.message}</p>}
       {posts.map((post) => (
-        <Post key={post.id} post={post} />
+        <div className="post" key={post.id}>
+          <h2>{post.title}</h2>
+          <p>{post.body}</p>
+        </div>
       ))}
     </div>
   );
 }
 
 export default App;
-
-interface PostProps {
-  post: PostType;
-}
-
-const Post = ({ post }: PostProps) => (
-  <div className="post">
-    <h2>{post.title}</h2>
-    <p>{post.body}</p>
-  </div>
-);
