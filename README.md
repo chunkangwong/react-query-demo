@@ -19,10 +19,6 @@ The old way of fetching data in React would be to use the `useState` and `useEff
 ```js
 import { useEffect, useState } from "react";
 
-const fetchPosts = async () => {
-  ...
-};
-
 const [posts, setPosts] = useState([]);
 const [error, setError] = useState(null);
 const [isLoading, setIsLoading] = useState(false);
@@ -63,10 +59,6 @@ With React Query, you can do the same thing with much less code:
 
 ```js
 import { useQuery } from "react-query";
-
-const fetchPosts = async () => {
-  ...
-};
 
 const { data: posts, error, isLoading } = useQuery("posts", fetchPosts);
 ```
