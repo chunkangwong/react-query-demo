@@ -14,7 +14,7 @@ const fetchPosts = async () => {
 };
 ```
 
-The old way of fetching data in React would be to use the `useEffect` hook to fetch the data and store it in state together with a loading flag and an error flag:
+The old way of fetching data in React would be to use the `useState` and `useEffect` hook to fetch the data and store it in state together with a loading flag and an error flag:
 
 ```js
 import { useEffect, useState } from "react";
