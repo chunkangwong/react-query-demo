@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import "./App.css";
 
 interface Post {
@@ -15,34 +15,21 @@ const fetchPosts = async () => {
 };
 
 function App() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [error, setError] = useState<Error | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    fetchPosts()
-      .then((posts) => {
-        setPosts(posts);
-      })
-      .catch((error) => {
-        setError(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  const { data: posts, error, isLoading } = useQuery(["posts"], fetchPosts);
 
   return (
     <div className="App">
-      {isLoading && <p>Loading...</p>}
-      {error && <p className="error">{error.message}</p>}
-      {posts.map((post) => (
-        <div className="post" key={post.id}>
-          <h2>{post.title}</h2>
-          <p>{post.body}</p>
-        </div>
-      ))}
+      <>
+        {isLoading && <p>Loading...</p>}
+        {error && <p className="error">{(error as Error).message}</p>}
+        {posts &&
+          posts.map((post) => (
+            <div className="post" key={post.id}>
+              <h2>{post.title}</h2>
+              <p>{post.body}</p>
+            </div>
+          ))}
+      </>
     </div>
   );
 }
