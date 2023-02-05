@@ -60,5 +60,5 @@ With React Query, you can do the same thing with much less code:
 ```js
 import { useQuery } from "react-query";
 
-const { data: posts, error, isLoading } = useQuery("posts", fetchPosts);
+const { data: posts, error, isLoading } = useQuery(["posts"], fetchPosts);
 ```
